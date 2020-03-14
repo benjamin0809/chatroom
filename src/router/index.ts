@@ -7,6 +7,7 @@ import Layout from '@/views/Layout.vue'
 import userRouter from '@/router/modules/user'
 import homeRouter from '@/router/modules/home'
 import Scheduler from '@/views/Scheduler.vue'
+import Chatroom from '@/views/Chatroom.vue'
 import asyncRouter from './async'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -30,7 +31,7 @@ const router = new Router({
         {
           path: '/home',
           name: 'index',
-          component: Scheduler
+          component: Chatroom
         }
       ]
     },
@@ -53,34 +54,35 @@ router.beforeEach((to: Route, from: Route, next: any) => {
     return
   }
   // console.log(moduleUser.Roles)
-  if (moduleUser.Roles.length === 0) {
-    const user = getUser()
-    // console.log('user', user)
-    if (user) {
-      let initVal: IUserInfo = user
-      moduleUser.setUserInfo(initVal)
-      // 是否需要添加路由，
-      if (initVal.Roles.includes(2)) {
-        if (router) {
-          // 动态添加路由
-          router.addRoutes(asyncRouter)
-          // Hack: ensure addRoutes is complete
-          // Set the replace: true, so the navigation will not leave a history record
-          next({ ...to, replace: true })
-        }
-      } else {
-        next()
-      }
-    } else {
-      if (to.path === '/home') {
-        next(`/login`)
-      } else {
-        next(`/login?redirect=${to.path}`)
-      }
-    }
-  } else {
-    next()
-  }
+  // if (moduleUser.Roles.length === 0) {
+  //   const user = getUser()
+  //   // console.log('user', user)
+  //   if (user) {
+  //     let initVal: IUserInfo = user
+  //     moduleUser.setUserInfo(initVal)
+  //     // 是否需要添加路由，
+  //     if (initVal.Roles.includes(2)) {
+  //       if (router) {
+  //         // 动态添加路由
+  //         router.addRoutes(asyncRouter)
+  //         // Hack: ensure addRoutes is complete
+  //         // Set the replace: true, so the navigation will not leave a history record
+  //         next({ ...to, replace: true })
+  //       }
+  //     } else {
+  //       next()
+  //     }
+  //   } else {
+  //     if (to.path === '/home') {
+  //       next(`/login`)
+  //     } else {
+  //       next(`/login?redirect=${to.path}`)
+  //     }
+  //   }
+  // } else {
+  //   next()
+  // }
+  next()
 })
 
 router.afterEach(() => {

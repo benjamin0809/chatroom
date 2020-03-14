@@ -96,6 +96,7 @@ import { Action } from 'vuex-class'
 import { DesHelper } from '@/utils/des'
 import { LANGUAGES, LOGIN_HINTS } from '@/constant'
 import { moduleUser } from '@/store/user'
+import Socket from '../utils/socketio'
 @Component
 export default class extends Vue {
   loading = false

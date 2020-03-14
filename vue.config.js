@@ -13,7 +13,7 @@ module.exports = {
   outputDir:'build',
   productionSourceMap: false,
   devServer: {
-    proxy: 'http://10.167.70.36',
+    proxy: 'http://localhost',
     port: devServerPort,
     open: true,
     overlay: {

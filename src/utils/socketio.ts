@@ -59,7 +59,17 @@ class Socket {
       fn.call(fn, data)
     })
   }
+  joinRoom(roomId: number) {
+    this.socket.emit('join room', { roomId: roomId })
+  }
 
+  joinRooms(roomIds: number[]) {
+    this.socket.emit('join room', { roomId: roomIds })
+  }
+
+  joinDefaultRoom(username: string) {
+    this.socket.emit('add user', username)
+  }
   sendMsgToRoom(roomId: number, message: string) {
     this.socket.emit('send room', { message: message, roomId: roomId })
   }
@@ -70,6 +80,10 @@ class Socket {
 
   typing(message: string) {
     this.socket.emit('typing', { message: message })
+  }
+
+  static genID(length: number) {
+    return Number(Math.random().toString().substr(3,length) + Date.now()).toString(36)
   }
 
 }

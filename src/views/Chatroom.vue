@@ -1,298 +1,558 @@
-<template>
-  <div id="login" >
-    <!-- :style="{ backgroundImage: 'url(' + bg  + ')' }" -->
-    <div class="box">
-      <!-- <div class="left-box">
-        <el-carousel indicator-position="outside">
-          <el-carousel-item v-for="item in 4" :key="item">
-            <h3>{{ item }}</h3>
-          </el-carousel-item>
-        </el-carousel>
-      </div> -->
+<style lang="scss" scoped>
+.left {
+  width: max-content;
+  border-right: 1px solid #80808038;
+  padding: 0.5rem;
+  background-color: #80808038;
+  ul {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    background-color: #ffffff;
+  }
 
-      <!-- <div class="right-box"> -->
-        <!-- <el-tabs type="border-card" class="login-card"> -->
-          <!-- <el-tab-pane :label="$t('login.byAccount')"> -->
-            <el-card shadow="always">
+  li {
+    list-style: none;
+    width: 200px;
+    vertical-align: middle;
+    line-height: 60px;
+    height: 60px;
+    border-right: 1px solid #80808038;
+    border-top: 1px solid #80808038;
+    overflow: hidden;
+    &:first-child {
+      border-top: none;
+    }
 
-                <h2 class="login-desc">用户身份验证</h2>
+    &:last-child {
+       border-bottom: 1px solid #80808038;
+    }
+  }
+}
+  
+ 
+
+.right {
+  flex-grow: 1;
+  text-align: center;
+  position: relative;
+  border-right: 1px solid #80808038;
+  background-color: #80808038;
+  ul {
+    padding: 1rem;
+  }
+}
+
+.extra{
+  display: flex;
+  flex-direction: column;
+  header {
+      height: 35px;
+      border-bottom: 1px solid #80808038;
+      padding :8px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      &:nth-child(n + 1){
+        border-top: 1px solid #80808038;
+      }
+    }
     
-            <el-form
-              ref="ruleForm"
-              :model="ruleForm"
-              status-icon
-              :rules="rules2"
-              label-width="120px"
-              class="demo-ruleForm"
-            >
-              <el-form-item prop="account" class="margin-h-16">
-                <el-input
-                  v-model="ruleForm.account"
-                  type="text"
-                  auto-complete="off"
-                ><template slot="prepend"><svg-icon class="icon"
-                  name="account"
-                /></template>
-                </el-input>
-              </el-form-item>
-              <el-form-item prop="pass" class="margin-h-16">
-                <el-input
-                  v-model="ruleForm.pass"
-                  type="password"
-                  auto-complete="off"
-                  ><template slot="prepend"><svg-icon class="icon"
-                  name="password"
-                /></template>
-                </el-input>
-              </el-form-item>
-              <!--      workflow登录提示 -->
-            <div v-for="(item, index) in showHints" :key="index" class="hint">
-              {{ item.index }}. {{ item.content }}
-            </div>
-              <el-form-item class="margin-h-16"> 
-                <!-- <el-button @click="resetForm('ruleForm')" :disabled="loading">{{
-                  $t('login.reset')
-                }}</el-button> -->
-                <el-button class="login-button"
-                  type="primary"
-                  :disabled="!ruleForm.account || !ruleForm.pass" 
-                  @click="submitForm('ruleForm')"
-                  :loading="loading"
-                  >{{ $t('login.submit') }}</el-button
-                >
-                
-              </el-form-item>
-            </el-form>
+  .online-list,
+  .other-room{ 
+    flex-grow: 1; 
+    width: max-content;
+    min-width: 200px; 
+    position: relative;
+    overflow: hidden;
+    section{
+      height: 100%;
+      position: relative;
+      overflow: auto;
+      margin-top: 35px;
+      ul {
+          padding-left: 8px;
+          
+          li {
+            padding: 4px;
+            cursor: pointer;
+            list-style: none;
+            .online-contact{
+              display: flex;
+              align-items: center;
+              .avatar{
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+              }
 
-            
-            <!--      选择语言 -->
-            <el-row>
-              <el-button
-                v-for="lang in langs"
-                :key="lang.code"
-                size="medium"
-                type="primary"
-                plain
-                @click="changeLang(lang)"
-                >{{ lang.lang }}</el-button
-              >
-            </el-row>
-            </el-card>
-          <!-- </el-tab-pane> -->
+              span{
+                padding-left: 8px;
+                flex-grow: 1;
+              }
 
-          <!-- <el-tab-pane :label="$t('login.byiProud')">Config</el-tab-pane>
-        </el-tabs> -->
+              i{
+                width: max-content;
+                font-size: 20px;
+              }
+            }
+          }
+        }
+    }
+  
+  } 
+}
+
+ 
+.chat {
+  position: absolute;
+  margin: 2rem auto;
+  left: 10vw;
+  right: 10vw;
+  top: 10vh;
+  bottom: 10vh;
+  display: flex;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  max-width: 1024px;
+}
+
+.liselected {
+  background: #80808038;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 3px;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+.list-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  .inner-item {
+    flex-grow: 1;
+    height: 48px;
+    text-align: left;
+  }
+
+  .inner-item .nick {
+    margin: 0 0 0 4px;
+    line-height: 32px;
+    font-weight: 500;
+  }
+
+  .inner-item .last-chat {
+    margin: 0 0 0 4px;
+    line-height: 16px;
+    font-size: 12px;
+  }
+}
+
+
+.right header {
+  border-bottom: 1px solid #80808038;
+}
+.right .content-box {
+  position: relative;
+  overflow: auto;
+}
+.right {
+  header h1 {
+    margin: 1rem auto;
+  }
+
+  .input-box {
+    flex-direction: column;
+    background: #fff;
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    top: 70%;
+    border-top: 1px solid #80808038;
+    .input {
+      flex-grow: 1;
+      textarea {
+        &:focus {
+          outline: none;
+        }
+        width: 100%;
+        border: none;
+        resize: none;
+        padding: 16px;
+        height: 100%;
+      }
+    }
+    .buttons {
+      #submit {
+        padding: 4px 12px;
+        float: right;
+        border-radius: 4px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+      }
+      height: max-content;
+    }
+    .tools {
+      height: max-content;
+    }
+  }
+}
+
+.buttons::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.right li {
+  list-style: none;
+  margin-bottom: 8px;
+}
+
+.msg-left {
+  text-align: left;
+}
+
+.msg-left .msg-left-box {
+  display: flex;
+}
+
+.msg-left .msg-left-content {
+  display: inline-block;
+}
+
+.msg-left .msg-left-content p {
+  margin: 4px 12px;
+}
+
+.msg-content {
+  display: inline-block;
+  padding: 8px;
+  background: #fff;
+  border-radius: 5px;
+  position: relative;
+}
+
+.left-triangle {
+  margin-left: 10px;
+}
+
+.right-triangle {
+  margin-right: 10px;
+  margin-right: 10px;
+  background: #2196f3;
+  color: #fff;
+}
+
+.right-triangle:after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  top: 8px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-left: 10px solid #2196f3;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+.left-triangle:after {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 4px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-left: 10px solid transparent;
+  border-right: 10px solid #fff;
+  border-bottom: 10px solid transparent;
+}
+
+.msg-right {
+  text-align: right;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 60px;
+}
+
+.header-box {
+  display: flex;
+  margin: auto;
+  height: 100%;
+  margin-right: 2rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.header-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+</style>
+<template>
+  <div>
+    <div class="header">
+      <div class="header-box">
+        <span class="nickname">{{username}}</span>
+        <img
+          class="header-avatar"
+          :src="getImgUrl(username)"
+        />
       </div>
-      <!--     -->
     </div>
-  <!-- </div> -->
+    <div class="chat">
+      <div class="left">
+        <ul>
+
+           <li  @click="selectRoom()" :class="0 === currentRoomId ? 'liselected' : ''">
+            <div class="list-item">
+              <img
+                class="avatar"
+                src="http://image.popochiu.com/32845622-3-thread_28272798_20200307142236_s_70454_o_w_690_h_1211_9965.png"
+              />
+              <div class="inner-item">
+                <p class="nick">技術性調整</p>
+                <p class="last-chat">精神小夥</p>
+              </div>
+            </div>
+          </li> 
+
+           <li v-for="(item,index) in myRooms" :key="index" @click="selectRoom(item)" :class="item.id === currentRoomId ? 'liselected' : ''">
+            <div class="list-item">
+              <img
+                class="avatar"
+                src="http://image.popochiu.com/32845622-3-thread_28272798_20200307142236_s_70454_o_w_690_h_1211_9965.png"
+              />
+              <div class="inner-item">
+                <p class="nick">{{item.name}}</p>
+                <p class="last-chat">{{item.lastMsg}}</p>
+              </div>
+            </div>
+          </li> 
+        </ul>
+      </div>
+      <div class="right">
+        <header>
+          <h1 class="chat-title">{{title}}</h1>
+        </header>
+        <div class="content-box">
+          <ul>
+            <li
+              :class="item.isSend ? 'msg-right' : 'msg-left'"
+              v-for="(item, index) in messages"
+              :key="index"
+            >
+              <div class="msg-left-box" v-if="!item.isSend">
+                <img class="avatar" :src="getImgUrl(item.username)" />
+                <div class="msg-left-content">
+                  <p>{{item.username}}</p>
+                  <div class="msg-content left-triangle">
+                    {{item.msg}}
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="item.isSend">
+                <div class="msg-content right-triangle">
+                       {{item.msg}}
+                </div>
+                <img class="avatar" :src="getImgUrl(username)" />
+              </div>
+            </li>
+          </ul>
+        </div>
+        <footer class="input-box">
+          <div class="tools"></div>
+          <div class="input">
+            <textarea
+              placeholder="..."
+              name=""
+              id="inputMessage"
+              cols="30"
+              v-model="inputValue"
+              @keyup.13="submit($event)"
+            ></textarea>
+          </div>
+          <div class="buttons">
+            <button id="submit" @click="submit">发送</button>
+          </div>
+        </footer>
+      </div>
+
+      <div class="extra">
+        <div class="online-list">
+          <header>房間老友({{onlineList.length}})</header>
+          <section>
+                  <ul>
+            <li v-for="(item, index) in onlineList" :key="index"> 
+                <el-popover
+                placement="top-start"
+                :title="item.name"
+                width="200"
+                trigger="hover"
+                :content="item.id">
+                  <div slot="reference" class="online-contact">
+                    <img class="avatar" :src="getImgUrl(item.name)">
+                    <span>{{item.name}} </span> 
+                </div> 
+              </el-popover>
+              
+              </li>  
+          </ul>
+          </section> 
+        </div>
+
+        <div class="other-room">
+           <header>其他房間(2)</header>
+           <section>
+                  <ul>
+            <li v-for="(item, index) in rooms" :key="index"> 
+                <div slot="reference" class="online-contact" >
+                    <img class="avatar" :src="getImgUrl(item.name)">
+                    <span>{{item.name}} </span> 
+                    <i class=" el-icon-circle-plus-outline" @click="joinRoom(item, index)"></i> 
+                </div>  
+              </li>  
+          </ul>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { Message } from 'element-ui'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Action } from 'vuex-class'
 import { DesHelper } from '@/utils/des'
 import { LANGUAGES, LOGIN_HINTS } from '@/constant'
 import { moduleUser } from '@/store/user'
+import Socket from '../utils/socketio'
+import { Message } from '@/models/message'
 @Component
 export default class extends Vue {
-  loading = false
-  langs = LANGUAGES
-  changeLang(lang: any) {
-    this.$i18n.locale = lang.code
-    localStorage.setItem('lang', lang.code)
-    window.location.reload()
-  }
-
-  hints = LOGIN_HINTS
-  hintItem = this.hints.find(p => p.lang === localStorage.getItem('lang')) || this.hints[0]
-
-  showHints = this.hintItem && this.hintItem.hints
-
-  validateAccount(rule: any, value: any, callback: any) {
-    if (value === '') {
-      callback(new Error(this.$t('login.accHint').toString()))
+  inputValue = ''
+  currentRoomId = 0
+  messages: any[] = []
+  msgBox = new Map()
+  onlineList: any[] = []
+  myRooms: any[] = []
+  rooms: any[] = []
+  title = '技術性調整'
+  instance: Socket = new Socket('localhost?token=12', '/chat')
+  username = ''
+  created() {
+    this.msgBox.set(0, [])
+    this.rooms = [{
+      name: 'Room 1',
+      id: 1
+    },{
+      name: 'Room 2',
+      id: 2
+    }]
+    this.username = localStorage.getItem('username') || ''
+    if (!this.username) {
+      this.username = Socket.genID(5)
+      localStorage.setItem('username', this.username)
     } else {
-      callback()
-    }
-  }
+      let myRooms: any[] = JSON.parse(localStorage.getItem(this.username + '-myRooms') || '[]')
 
-  validatePass(rule: any, value: any, callback: any) {
-    if (value === '') {
-      callback(new Error(this.$t('login.passHint').toString()))
-    } else {
-      if (this.ruleForm.checkPass !== '') {
-        console.log('')
-        ;(this.$refs.ruleForm as any).validateField('checkPass')
+      if (myRooms && myRooms.length > 0) {
+        this.myRooms.push(...myRooms)
+        this.rooms = this.rooms.filter((item) => {
+          return !myRooms.find(my => my.id === item.id)
+        })
+        let ids = this.myRooms.map(item => item.id)
+        this.instance.joinRooms(ids)
       }
-      callback()
     }
-  }
+    this.instance.joinDefaultRoom(this.username)
+    this.instance.listenOnLogined((data: any) => {
+      console.log(data)
+    })
 
-  ruleForm = {
-    account: '',
-    pass: '',
-    checkPass: ''
-  }
+    this.instance.listenOnReceiveMsg((data: Message) => {
+      console.log(data)
+      const msg = {
+        msg: data.message,
+        username: data.username,
+        isSend: false
+      }
 
-  rules2 = {
-    account: [{ validator: this.validateAccount, trigger: 'blur' }],
-    pass: [{ validator: this.validatePass, trigger: 'blur' }]
-  }
-
-  submitForm(formName: string) {
-    // submit
-    (this.$refs[formName] as any).validate(async (valid: boolean) => {
-      if (valid) {
-        this.loading = true
-        try {
-          // await login(this.ruleForm.account, this.ruleForm.pass)
-          await moduleUser.login({
-            account: this.ruleForm.account,
-            password: this.ruleForm.pass
-          })
-          this.loading = false
-          let defaultRoute = '/home'
-          // console.log(moduleUser.UserNo)
-          if (this.$route.query.redirect) {
-            defaultRoute = this.$route.query.redirect as string
-          }
-          // debugger
-          this.$router.push(defaultRoute).catch(err => {
-            console.error(err)
-          })
-        } catch (e) {
-          this.loading = false
-        }
-        return false
+      if (data.roomId === this.currentRoomId) {
+        this.messages.push(msg)
+        this.msgBox.set(this.currentRoomId, this.messages)
       } else {
-        console.log('error submit!!')
-        return false
+        let messages = this.msgBox.get(data.roomId) || []
+        messages.push(msg)
+        this.msgBox.set(data.roomId, messages)
       }
     })
-  }
-  resetForm(formName: string) {
-    (this.$refs[formName] as any).resetFields()
+
+    this.instance.listenOnRefresh((data: any) => {
+      this.onlineList = data.data
+      console.log(this.onlineList)
+    })
   }
 
-  created() {
-    // register('asdadsdasd', '123').then(res => {
-    //   console.log(res)
-    // })
-    // console.log(DesHelper.DesEncrypt('123', '123'))
-//     let xhr = new XMLHttpRequest()
-// xhr.timeout = 3000
-// xhr.ontimeout = function (event) {
-//       alert('请求超时！')
-//     }
-// xhr.open('GET', 'http://www.popochiu.com/file/base64/getpdf')
-// xhr.send()
-// xhr.onreadystatechange = function () {
-//       if (xhr.readyState == 4 && xhr.status == 200) {
-//             // alert(xhr.responseText);
-//         }
-//       else {
-//           // alert(xhr.statusText)
-//         }
-//     }
+  submit() {
+    console.log(this.inputValue)
+
+    if (!this.inputValue) {
+      return
+    }
+    if (this.currentRoomId === 0) {
+      this.instance.sendMsg(this.inputValue, 'text')
+    } else {
+      this.instance.sendMsgToRoom(this.currentRoomId,this.inputValue)
+    }
+    this.messages.push({
+      msg: this.inputValue,
+      username: 'benjamin',
+      isSend: true
+    })
+    this.msgBox.set(this.currentRoomId, this.messages)
+    this.inputValue = ''
+  }
+
+  joinRoom(item: any,index: number) {
+    this.rooms.splice(index,1)
+    this.myRooms.push(item)
+    localStorage.setItem(this.username + '-myRooms', JSON.stringify(this.myRooms))
+    this.selectRoom(item)
+    this.instance.joinRoom(item.id)
+  }
+
+  selectRoom(item: any) {
+    if (!item) {
+      item = {
+        id: 0,
+        name: '技術性調整'
+      }
+    }
+    this.title = item.name
+    this.currentRoomId = item.id
+    this.messages = this.msgBox.get(this.currentRoomId) || []
+  }
+
+  getImgUrl(username: string) {
+    return `/avatar/${username}`
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.login-desc{
-  text-align: center;
-}
-#login::after {
-  clear: both;
-  content: '';
-  display: block;
-}
-#login {
-  position: fixed;
-  background: url(../assets/login.jpg);
-  top:0;
-  bottom: 0;
-  left:0;
-  right:0;
-}
-
-.box {
-    margin: auto;
-    max-width: 400px;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-}
-.box::after {
-  clear: both;
-  content: '';
-  display: block;
-}
-
-.left-box {
-  margin-top: 15%;
-  float: left;
-  width: 600px;
-  //min-width: 50%;
-}
-
-.right-box {
-  margin-top: 15%;
-  float: right;
-  width: 400px;
-  margin-left: 20px;
-}
-.login-card {
-  height: 400px;
-}
-.el-row{
-  margin-left: 16px;
-  .el-button{
-    width: 30%;
-  }
-}
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 18px;
-  opacity: 0.75;
-  line-height: 300px;
-  margin: 0;
-}
-.el-carousel__container {
-  height: 400px !important;
-}
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n + 1) {
-  background-color: #d3dce6;
-}
-
-.hint {
-  margin-left: 16px;
-  text-align: left;
-  font-size: 14px;
-  margin-bottom: 10px;
-  color: #909399;
-}
-
-.login-button{
-  width: 100%;
-}
-
-.icon {
-  width: 1.2em !important;
-  height: 1.2em !important;
-  fill:#475669;
-}
- 
-
-// body{
-//   background: $theme-color;
-//   // background-image: url('../assets/login.jpg');
-// }
-</style>

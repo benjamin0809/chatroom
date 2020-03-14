@@ -66,6 +66,7 @@ body{
 .el-main {
   padding-top: 60px !important;
   position: relative;
+  height: calc(100vh - 60px)
 }
 
 </style>
