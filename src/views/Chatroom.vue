@@ -395,10 +395,10 @@
 
       <div class="extra">
         <div class="online-list">
-          <header>房間老友({{onlineList.length}})</header>
+          <header>房間老友({{CurrentRoomsObject.users.length}})</header>
           <section>
                   <ul>
-            <li v-for="(item, index) in onlineList" :key="index"> 
+            <li v-for="(item, index) in CurrentRoomsObject.users" :key="index"> 
                 <el-popover
                 placement="top-start"
                 :title="item.name"
@@ -423,7 +423,7 @@
             <li v-for="(item, index) in rooms" :key="index"> 
                 <div slot="reference" class="online-contact" >
                     <img class="avatar" :src="getImgUrl(item.name)">
-                    <span>{{item.name}} </span> 
+                    <span>{{getUserName(item.id)}} </span> 
                     <i class=" el-icon-circle-plus-outline" @click="joinRoom(item, index)"></i> 
                 </div>  
               </li>  
@@ -451,6 +451,11 @@ export default class extends Vue {
   messages: any[] = []
   msgBox = new Map()
   onlineList: any[] = []
+  userlist: any[] = []
+  CurrentRoomsObject = {
+    messages: [],
+    users: []
+  }
   myRooms: any[] = []
   rooms: any[] = []
   title = '技術性調整'
@@ -477,7 +482,9 @@ export default class extends Vue {
         this.rooms = this.rooms.filter((item) => {
           return !myRooms.find(my => my.id === item.id)
         })
-        let ids = this.myRooms.map(item => item.id)
+        let ids = this.myRooms.map(item => {
+          return item.id
+        })
         this.instance.joinRooms(ids)
       }
     }
@@ -505,11 +512,29 @@ export default class extends Vue {
     })
 
     this.instance.listenOnRefresh((data: any) => {
-      this.onlineList = data.data
+      this.onlineList = data.rooms
+      this.userlist = data.data
+      this.refreshRoomUsers()
       console.log(this.onlineList)
     })
   }
 
+  getUserName(id: string) {
+    if (!id) return ''
+    if (this.userlist && this.userlist.length > 0) {
+      const user = this.userlist.find(item => item.id === id)
+      if (user) {
+        return user.name
+      }
+    }
+    return 'y游客'
+  }
+  refreshRoomUsers() {
+    const room = this.onlineList.find(item => item.room === this.currentRoomId)
+    if (room && room.users) {
+      this.CurrentRoomsObject.users = room.users
+    }
+  }
   submit() {
     console.log(this.inputValue)
 
@@ -522,6 +547,7 @@ export default class extends Vue {
       this.instance.sendMsgToRoom(this.currentRoomId,this.inputValue)
     }
     this.messages.push({
+      roomId: this.currentRoomId,
       msg: this.inputValue,
       username: 'benjamin',
       isSend: true
@@ -547,6 +573,7 @@ export default class extends Vue {
     }
     this.title = item.name
     this.currentRoomId = item.id
+    this.refreshRoomUsers()
     this.messages = this.msgBox.get(this.currentRoomId) || []
   }
 
