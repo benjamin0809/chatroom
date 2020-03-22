@@ -29,8 +29,6 @@
     }
   }
 }
-  
- 
 
 .right {
   flex-grow: 1;
@@ -58,12 +56,12 @@
         border-top: 1px solid #80808038;
       }
     }
-    
+
   .online-list,
-  .other-room{ 
-    flex-grow: 1; 
+  .other-room{
+    flex-grow: 1;
     width: max-content;
-    min-width: 200px; 
+    min-width: 200px;
     position: relative;
     overflow: hidden;
     section{
@@ -73,7 +71,7 @@
       margin-top: 35px;
       ul {
           padding-left: 8px;
-          
+
           li {
             padding: 4px;
             cursor: pointer;
@@ -100,11 +98,10 @@
           }
         }
     }
-  
-  } 
+
+  }
 }
 
- 
 .chat {
   position: absolute;
   margin: 2rem auto;
@@ -152,7 +149,6 @@
     font-size: 12px;
   }
 }
-
 
 .right header {
   border-bottom: 1px solid #80808038;
@@ -307,127 +303,180 @@
   <div>
     <div class="header">
       <div class="header-box">
-        <span class="nickname">{{username}}</span>
+        <span class="nickname">{{ username }}</span>
         <img
           class="header-avatar"
           :src="getImgUrl(username)"
-        />
+          @click="changeAvatar"
+        >
       </div>
     </div>
     <div class="chat">
       <div class="left">
         <ul>
-
-           <li  @click="selectRoom()" :class="0 === currentRoomId ? 'liselected' : ''">
+          <li
+            :class="0 === currentRoomId ? 'liselected' : ''"
+            @click="selectRoom()"
+          >
             <div class="list-item">
               <img
                 class="avatar"
                 src="http://image.popochiu.com/32845622-3-thread_28272798_20200307142236_s_70454_o_w_690_h_1211_9965.png"
-              />
+              >
               <div class="inner-item">
-                <p class="nick">技術性調整</p>
-                <p class="last-chat">精神小夥</p>
+                <p class="nick">
+                  技術性調整
+                </p>
+                <p class="last-chat">
+                  精神小夥
+                </p>
               </div>
             </div>
-          </li> 
+          </li>
 
-           <li v-for="(item,index) in myRooms" :key="index" @click="selectRoom(item)" :class="item.id === currentRoomId ? 'liselected' : ''">
+          <li
+            v-for="(item,index) in myRooms"
+            :key="index"
+            :class="item.id === currentRoomId ? 'liselected' : ''"
+            @click="selectRoom(item)"
+          >
             <div class="list-item">
               <img
                 class="avatar"
                 src="http://image.popochiu.com/32845622-3-thread_28272798_20200307142236_s_70454_o_w_690_h_1211_9965.png"
-              />
+              >
               <div class="inner-item">
-                <p class="nick">{{item.name}}</p>
-                <p class="last-chat">{{item.lastMsg}}</p>
+                <p class="nick">
+                  {{ item.name }}
+                </p>
+                <p class="last-chat">
+                  {{ item.lastMsg }}
+                </p>
               </div>
             </div>
-          </li> 
+          </li>
         </ul>
       </div>
       <div class="right">
         <header>
-          <h1 class="chat-title">{{title}}</h1>
+          <h1 class="chat-title">
+            {{ title }}
+          </h1>
         </header>
         <div class="content-box">
           <ul>
             <li
-              :class="item.isSend ? 'msg-right' : 'msg-left'"
               v-for="(item, index) in messages"
               :key="index"
+              :class="item.isSend ? 'msg-right' : 'msg-left'"
             >
-              <div class="msg-left-box" v-if="!item.isSend">
-                <img class="avatar" :src="getImgUrl(item.username)" />
+              <div
+                v-if="!item.isSend"
+                class="msg-left-box"
+              >
+                <img
+                  class="avatar"
+                  :src="getImgUrl(item.username)"
+                >
                 <div class="msg-left-content">
-                  <p>{{item.username}}</p>
+                  <p>{{ item.username }}</p>
                   <div class="msg-content left-triangle">
-                    {{item.msg}}
+                    {{ item.msg }}
                   </div>
                 </div>
               </div>
 
               <div v-if="item.isSend">
                 <div class="msg-content right-triangle">
-                       {{item.msg}}
+                  {{ item.msg }}
                 </div>
-                <img class="avatar" :src="getImgUrl(username)" />
+                <img
+                  class="avatar"
+                  :src="getImgUrl(username)"
+                >
               </div>
             </li>
           </ul>
         </div>
         <footer class="input-box">
-          <div class="tools"></div>
+          <div class="tools" />
           <div class="input">
             <textarea
+              id="inputMessage"
+              v-model="inputValue"
               placeholder="..."
               name=""
-              id="inputMessage"
               cols="30"
-              v-model="inputValue"
               @keyup.13="submit($event)"
-            ></textarea>
+            />
           </div>
           <div class="buttons">
-            <button id="submit" @click="submit">发送</button>
+            <button
+              id="submit"
+              @click="submit"
+            >
+              发送
+            </button>
           </div>
         </footer>
       </div>
 
       <div class="extra">
         <div class="online-list">
-          <header>房間老友({{CurrentRoomsObject.users.length}})</header>
+          <header>房間老友({{ CurrentRoomsObject.users.length }})</header>
           <section>
-                  <ul>
-            <li v-for="(item, index) in CurrentRoomsObject.users" :key="index"> 
+            <ul>
+              <li
+                v-for="(item, index) in CurrentRoomsObject.users"
+                :key="index"
+              >
                 <el-popover
-                placement="top-start"
-                :title="item.name"
-                width="200"
-                trigger="hover"
-                :content="item.id">
-                  <div slot="reference" class="online-contact">
-                    <img class="avatar" :src="getImgUrl(item.name)">
-                    <span>{{item.name}} </span> 
-                </div> 
-              </el-popover>
-              
-              </li>  
-          </ul>
-          </section> 
+                  placement="top-start"
+                  :title="item.name"
+                  width="200"
+                  trigger="hover"
+                  :content="item.id"
+                >
+                  <div
+                    slot="reference"
+                    class="online-contact"
+                  >
+                    <img
+                      class="avatar"
+                      :src="getImgUrl(item.name)"
+                    >
+                    <span>{{ item.name }} </span>
+                  </div>
+                </el-popover>
+              </li>
+            </ul>
+          </section>
         </div>
 
         <div class="other-room">
-           <header>其他房間(2)</header>
-           <section>
-                  <ul>
-            <li v-for="(item, index) in rooms" :key="index"> 
-                <div slot="reference" class="online-contact" >
-                    <img class="avatar" :src="getImgUrl(item.name)">
-                    <span>{{getUserName(item.id)}} </span> 
-                    <i class=" el-icon-circle-plus-outline" @click="joinRoom(item, index)"></i> 
-                </div>  
-              </li>  
-          </ul>
+          <header>其他房間(2)</header>
+          <section>
+            <ul>
+              <li
+                v-for="(item, index) in rooms"
+                :key="index"
+              >
+                <div
+                  slot="reference"
+                  class="online-contact"
+                >
+                  <img
+                    class="avatar"
+                    :src="getImgUrl(item.id)"
+                  >
+                  <span>{{ getUserName(item.id) }} </span>
+                  <i
+                    class=" el-icon-circle-plus-outline"
+                    @click="joinRoom(item, index)"
+                  />
+                </div>
+              </li>
+            </ul>
           </section>
         </div>
       </div>
@@ -466,7 +515,7 @@ export default class extends Vue {
     this.rooms = [{
       name: 'Room 1',
       id: 1
-    },{
+    }, {
       name: 'Room 2',
       id: 2
     }]
@@ -512,10 +561,10 @@ export default class extends Vue {
     })
 
     this.instance.listenOnRefresh((data: any) => {
+      console.log(data)
       this.onlineList = data.rooms
       this.userlist = data.data
       this.refreshRoomUsers()
-      console.log(this.onlineList)
     })
   }
 
@@ -529,35 +578,39 @@ export default class extends Vue {
     }
     return 'y游客'
   }
+
+  changeAvatar() {
+    window.open('http://' + location.hostname + '/saveavatar.html?id=' + this.username, '_blank')
+  }
   refreshRoomUsers() {
     const room = this.onlineList.find(item => item.room === this.currentRoomId)
     if (room && room.users) {
-      this.CurrentRoomsObject.users = room.users
+      (this.CurrentRoomsObject.users as any) = this.userlist.filter(p => room.users.includes(p.id))
+    } else {
+      this.CurrentRoomsObject.users = []
     }
   }
   submit() {
-    console.log(this.inputValue)
-
-    if (!this.inputValue) {
+    if (!this.inputValue.trim()) {
       return
     }
     if (this.currentRoomId === 0) {
       this.instance.sendMsg(this.inputValue, 'text')
     } else {
-      this.instance.sendMsgToRoom(this.currentRoomId,this.inputValue)
+      this.instance.sendMsgToRoom(this.currentRoomId, this.inputValue)
     }
     this.messages.push({
       roomId: this.currentRoomId,
       msg: this.inputValue,
-      username: 'benjamin',
+      username: this.username,
       isSend: true
     })
     this.msgBox.set(this.currentRoomId, this.messages)
     this.inputValue = ''
   }
 
-  joinRoom(item: any,index: number) {
-    this.rooms.splice(index,1)
+  joinRoom(item: any, index: number) {
+    this.rooms.splice(index, 1)
     this.myRooms.push(item)
     localStorage.setItem(this.username + '-myRooms', JSON.stringify(this.myRooms))
     this.selectRoom(item)
@@ -582,4 +635,3 @@ export default class extends Vue {
   }
 }
 </script>
-
