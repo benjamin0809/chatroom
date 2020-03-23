@@ -25,7 +25,7 @@
     }
 
     &:last-child {
-       border-bottom: 1px solid #80808038;
+      border-bottom: 1px solid #80808038;
     }
   }
 }
@@ -41,64 +41,66 @@
   }
 }
 
-.extra{
+.extra {
   display: flex;
   flex-direction: column;
   header {
-      height: 35px;
-      border-bottom: 1px solid #80808038;
-      padding :8px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      &:nth-child(n + 1){
-        border-top: 1px solid #80808038;
-      }
+    height: 35px;
+    border-bottom: 1px solid #80808038;
+    padding: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    &:nth-child(n + 1) {
+      border-top: 1px solid #80808038;
     }
+  }
 
   .online-list,
-  .other-room{
+  .other-room {
+    .room-name {
+      text-align: left;
+    }
     flex-grow: 1;
     width: max-content;
     min-width: 200px;
     position: relative;
     overflow: hidden;
-    section{
+    section {
       height: 100%;
       position: relative;
       overflow: auto;
       margin-top: 35px;
       ul {
-          padding-left: 8px;
+        padding-left: 8px;
 
-          li {
-            padding: 4px;
-            cursor: pointer;
-            list-style: none;
-            .online-contact{
-              display: flex;
-              align-items: center;
-              .avatar{
-                width: 24px;
-                height: 24px;
-                border-radius: 50%;
-              }
+        li {
+          padding: 4px;
+          cursor: pointer;
+          list-style: none;
+          .online-contact {
+            display: flex;
+            align-items: center;
+            .avatar {
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+            }
 
-              span{
-                padding-left: 8px;
-                flex-grow: 1;
-              }
+            span {
+              padding-left: 8px;
+              flex-grow: 1;
+            }
 
-              i{
-                width: max-content;
-                font-size: 20px;
-              }
+            i {
+              width: max-content;
+              font-size: 20px;
             }
           }
         }
+      }
     }
-
   }
 }
 
@@ -308,7 +310,7 @@
           class="header-avatar"
           :src="getImgUrl(username)"
           @click="changeAvatar"
-        >
+        />
       </div>
     </div>
     <div class="chat">
@@ -319,10 +321,7 @@
             @click="selectRoom()"
           >
             <div class="list-item">
-              <img
-                class="avatar"
-                src="http://image.popochiu.com/32845622-3-thread_28272798_20200307142236_s_70454_o_w_690_h_1211_9965.png"
-              >
+              <img class="avatar" src="/avatar/getAvatar/group" />
               <div class="inner-item">
                 <p class="nick">
                   技術性調整
@@ -335,7 +334,7 @@
           </li>
 
           <li
-            v-for="(item,index) in myRooms"
+            v-for="(item, index) in myRooms"
             :key="index"
             :class="item.id === currentRoomId ? 'liselected' : ''"
             @click="selectRoom(item)"
@@ -344,7 +343,7 @@
               <img
                 class="avatar"
                 src="http://image.popochiu.com/32845622-3-thread_28272798_20200307142236_s_70454_o_w_690_h_1211_9965.png"
-              >
+              />
               <div class="inner-item">
                 <p class="nick">
                   {{ item.name }}
@@ -370,14 +369,8 @@
               :key="index"
               :class="item.isSend ? 'msg-right' : 'msg-left'"
             >
-              <div
-                v-if="!item.isSend"
-                class="msg-left-box"
-              >
-                <img
-                  class="avatar"
-                  :src="getImgUrl(item.username)"
-                >
+              <div v-if="!item.isSend" class="msg-left-box">
+                <img class="avatar" :src="getImgUrl(item.username)" />
                 <div class="msg-left-content">
                   <p>{{ item.username }}</p>
                   <div class="msg-content left-triangle">
@@ -390,10 +383,7 @@
                 <div class="msg-content right-triangle">
                   {{ item.msg }}
                 </div>
-                <img
-                  class="avatar"
-                  :src="getImgUrl(username)"
-                >
+                <img class="avatar" :src="getImgUrl(username)" />
               </div>
             </li>
           </ul>
@@ -411,10 +401,7 @@
             />
           </div>
           <div class="buttons">
-            <button
-              id="submit"
-              @click="submit"
-            >
+            <button id="submit" @click="submit">
               发送
             </button>
           </div>
@@ -437,15 +424,9 @@
                   trigger="hover"
                   :content="item.id"
                 >
-                  <div
-                    slot="reference"
-                    class="online-contact"
-                  >
-                    <img
-                      class="avatar"
-                      :src="getImgUrl(item.name)"
-                    >
-                    <span>{{ item.name }} </span>
+                  <div slot="reference" class="online-contact">
+                    <img class="avatar" :src="getImgUrl(item.name)" />
+                    <span class="room-name">{{ item.name }} </span>
                   </div>
                 </el-popover>
               </li>
@@ -457,19 +438,10 @@
           <header>其他房間(2)</header>
           <section>
             <ul>
-              <li
-                v-for="(item, index) in rooms"
-                :key="index"
-              >
-                <div
-                  slot="reference"
-                  class="online-contact"
-                >
-                  <img
-                    class="avatar"
-                    :src="getImgUrl(item.id)"
-                  >
-                  <span>{{ getUserName(item.id) }} </span>
+              <li v-for="(item, index) in rooms" :key="index">
+                <div slot="reference" class="online-contact">
+                  <img class="avatar" :src="getImgUrl(item.id)" />
+                  <span class="room-name">{{ item.name }} </span>
                   <i
                     class=" el-icon-circle-plus-outline"
                     @click="joinRoom(item, index)"
@@ -512,23 +484,29 @@ export default class extends Vue {
   username = ''
   created() {
     this.msgBox.set(0, [])
-    this.rooms = [{
-      name: 'Room 1',
-      id: 1
-    }, {
-      name: 'Room 2',
-      id: 2
-    }]
+    this.rooms = [
+      {
+        name: 'Room 1',
+        id: 1
+      },
+      {
+        name: 'Room 2',
+        id: 2
+      }
+    ]
     this.username = localStorage.getItem('username') || ''
+    this.instance.joinRoom(0)
     if (!this.username) {
       this.username = Socket.genID(5)
       localStorage.setItem('username', this.username)
     } else {
-      let myRooms: any[] = JSON.parse(localStorage.getItem(this.username + '-myRooms') || '[]')
+      let myRooms: any[] = JSON.parse(
+        localStorage.getItem(this.username + '-myRooms') || '[]'
+      )
 
       if (myRooms && myRooms.length > 0) {
         this.myRooms.push(...myRooms)
-        this.rooms = this.rooms.filter((item) => {
+        this.rooms = this.rooms.filter(item => {
           return !myRooms.find(my => my.id === item.id)
         })
         let ids = this.myRooms.map(item => {
@@ -580,12 +558,17 @@ export default class extends Vue {
   }
 
   changeAvatar() {
-    window.open('http://' + location.hostname + '/saveavatar.html?id=' + this.username, '_blank')
+    window.open(
+      'http://' + location.hostname + '/avatar/upload?id=' + this.username,
+      '_blank'
+    )
   }
   refreshRoomUsers() {
     const room = this.onlineList.find(item => item.room === this.currentRoomId)
     if (room && room.users) {
-      (this.CurrentRoomsObject.users as any) = this.userlist.filter(p => room.users.includes(p.id))
+      (this.CurrentRoomsObject.users as any) = this.userlist.filter(p =>
+        room.users.includes(p.id)
+      )
     } else {
       this.CurrentRoomsObject.users = []
     }
@@ -594,11 +577,7 @@ export default class extends Vue {
     if (!this.inputValue.trim()) {
       return
     }
-    if (this.currentRoomId === 0) {
-      this.instance.sendMsg(this.inputValue, 'text')
-    } else {
-      this.instance.sendMsgToRoom(this.currentRoomId, this.inputValue)
-    }
+    this.instance.sendMsgToRoom(this.currentRoomId, this.inputValue)
     this.messages.push({
       roomId: this.currentRoomId,
       msg: this.inputValue,
@@ -612,7 +591,10 @@ export default class extends Vue {
   joinRoom(item: any, index: number) {
     this.rooms.splice(index, 1)
     this.myRooms.push(item)
-    localStorage.setItem(this.username + '-myRooms', JSON.stringify(this.myRooms))
+    localStorage.setItem(
+      this.username + '-myRooms',
+      JSON.stringify(this.myRooms)
+    )
     this.selectRoom(item)
     this.instance.joinRoom(item.id)
   }
@@ -631,7 +613,7 @@ export default class extends Vue {
   }
 
   getImgUrl(username: string) {
-    return `/avatar/${username}`
+    return `/avatar/getAvatar/${username}`
   }
 }
 </script>
