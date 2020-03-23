@@ -13,21 +13,18 @@ export interface UpdateSiteEntity extends CreateSiteEntity {
   CodeId: number
 }
 
-export interface CreateMeetingRoomEntity {
-  RoomName: string
-  DeptID?: string
-  Position?: string
-  StatusID?: number
-  ExtInt1?: number
-  ExtInt2?: number
-  Device?: string
-  Site: string
+export interface CreateChatRoomEntity {
+  name: string
+  description?: string
+  password?: string
+  avatar?: string
+  has_pwd: number
 }
 
-export interface UpdateMeetingRoomEntity extends CreateMeetingRoomEntity {
-  RoomID: number
+export interface UpdateChatRoomEntity extends CreateChatRoomEntity {
+  id: number
 }
 
-export interface MeetingRoomEntity extends UpdateMeetingRoomEntity, BaseEntity {
+export interface MeetingRoomEntity extends UpdateChatRoomEntity, BaseEntity {
 
 }

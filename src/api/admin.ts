@@ -1,5 +1,5 @@
 import request from '../utils/request'
-import { UpdateSiteEntity, CreateSiteEntity, ISite, IRoom, UpdateMeetingRoomEntity, CreateMeetingRoomEntity, MeetingRoomEntity } from '@/models'
+import { UpdateSiteEntity, CreateSiteEntity, ISite, IRoom, UpdateChatRoomEntity, CreateChatRoomEntity, MeetingRoomEntity } from '@/models'
 
 export interface IAdminAPI {
   /**
@@ -30,12 +30,12 @@ export interface IAdminAPI {
    * 更新会议室信息
    * @param entity 实体
    */
-  UpdateRoom (entity: UpdateMeetingRoomEntity): Promise<any>
+  UpdateRoom (entity: UpdateChatRoomEntity): Promise<any>
   /**
    * 增加会议室
    * @param entity 实体
    */
-  AddRoom (entity: CreateMeetingRoomEntity): Promise<any>
+  AddRoom (entity: CreateChatRoomEntity): Promise<any>
   /**
    * 获取会议室
    * @returns 会议室列表
@@ -44,16 +44,16 @@ export interface IAdminAPI {
 }
 class AdminAPI implements IAdminAPI {
   DeleteRoom(RoomID: number): Promise<any> {
-    return request.post<any>('admin/DeleteRoom', { RoomID })
+    return request.post<any>('deleteRoom', { RoomID })
   }
-  UpdateRoom(entity: UpdateMeetingRoomEntity): Promise<any> {
-    return request.post<any>('admin/UpdateRoom', entity)
+  UpdateRoom(entity: UpdateChatRoomEntity): Promise<any> {
+    return request.post<any>('updateRoom', entity)
   }
-  AddRoom(entity: CreateMeetingRoomEntity): Promise<any> {
-    return request.post<any>('admin/AddRoom', entity)
+  AddRoom(entity: CreateChatRoomEntity): Promise<any> {
+    return request.post<any>('createRoom', entity)
   }
   GetRoom(): Promise<MeetingRoomEntity[]> {
-    return request.get<MeetingRoomEntity[]>('admin/GetRoom', { })
+    return request.get<MeetingRoomEntity[]>('getRooms', { })
   }
   GetSites(): Promise<ISite[]> {
     return request.get<ISite[]>('admin/GetSite', { })

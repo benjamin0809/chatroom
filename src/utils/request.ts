@@ -40,7 +40,7 @@ instance.interceptors.response.use(
   function(response) {
     // console.log(response)
     try {
-      if (response.data && response.data.Errcode === 0) {
+      if (response.data && response.data.errorCode === 0) {
         return response
       } else {
         return Promise.reject(response.data)
@@ -71,7 +71,7 @@ class Request {
   static get<T>(url: string, config?: AxiosRequestConfig | undefined) {
     return new Promise<T>(function (resolve, reject) {
       instance.get<IResponseResult<T>>(url, config).then(function(res: AxiosResponse<IResponseResult<T>>) {
-        resolve(res.data.Result)
+        resolve(res.data.data)
       }).catch(function(err: IResponseResult<any>) {
         reject(err)
       })
@@ -83,7 +83,7 @@ class Request {
     config.params = data
     return new Promise<T>(function (resolve, reject) {
       instance.get<IResponseResult<T>>(url, config).then(function(res: AxiosResponse<IResponseResult<T>>) {
-        resolve(res.data.Result)
+        resolve(res.data.data)
       }).catch(function(err: IResponseResult<any>) {
         reject(err)
       })
@@ -96,7 +96,7 @@ class Request {
       console.log('Promise:',Promise,'instance',instance)
       instance.post<IResponseResult<T>>(url, data, config).then(function (res: AxiosResponse<IResponseResult<T>>) {
         console.log('res:',res)
-        resolve(res.data.Result)
+        resolve(res.data.data)
       }).catch(function(err: any) {
         reject(err)
       })

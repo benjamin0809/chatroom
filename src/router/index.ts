@@ -42,7 +42,7 @@ const router = new Router({
     userRouter
   ]
 })
-
+router.addRoutes(asyncRouter)
 router.beforeEach((to: Route, from: Route, next: any) => {
   NProgress.start()
   // console.log(moduleUser)

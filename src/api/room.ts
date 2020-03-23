@@ -3,6 +3,15 @@ import { IBookingRoomInput, IHomeDataResult, IUpdateBookingRoomInput, IRoom, IHo
 
 export interface IRoomAPI {
   /**
+   * 加入房间
+   */
+  joinRoom (userid: number, roomid: number): Promise<any[]>
+  /**
+   * 加入房间
+   */
+  joinRoomSocketName (username: string, roomid: number): Promise<any[]>
+
+  /**
    * 获取启用的会议室
    */
   GetActiveRoom (): Promise<IRoom[]>
@@ -69,6 +78,14 @@ class RoomAPI implements IRoomAPI {
 
   GetMeetingRoomData(roomId: number, queryDate: string) {
     return request.get<IHomeDataResult[]>('room/GetMeetingRoomData', { params: { roomId, queryDate } })
+  }
+
+  joinRoom(userid: number, roomid: number) {
+    return request.post<any[]>('joinRoom', { params: { userid, roomid } })
+  }
+
+  joinRoomSocketName(username: string, roomid: number) {
+    return request.post<any[]>('joinRoomSocketName', { params: { username, roomid } })
   }
 }
 

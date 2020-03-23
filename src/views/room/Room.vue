@@ -13,161 +13,163 @@
     </div>
     <el-dialog
       :title="
-        roomForm.RoomID ? $t('room.dialogTitle1') : $t('room.dialogTitle')
+        roomForm.id ? $t('room.dialogTitle1') : $t('room.dialogTitle')
       "
       :visible.sync="dialogVisible"
       width="30%"
       @close="resetForm('roomForm')"
     >
       <el-form
+        ref="roomForm"
         :model="roomForm"
         :rules="rules"
-        ref="roomForm"
         label-width="100px"
       >
-        <el-form-item :label="$t('room.name')" prop="name">
+        <el-form-item
+          label="房间名称"
+          prop="name"
+        >
           <el-input
+            v-model="roomForm.name"
             type="text"
-            v-model="roomForm.RoomName"
             auto-complete="off"
             placeholder
-          ></el-input>
+          />
         </el-form-item>
-        <el-form-item :label="$t('room.site')" prop="site">
-          <el-select
-            v-model="roomForm.Site"
-            :placeholder="$t('room.pleaseChoose')"
-          >
-            <el-option
-              v-for="item in siteData"
-              :key="item.CodeId"
-              :label="item.Name"
-              :value="item.Code"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('room.valid')" prop="valid">
-          <el-radio-group v-model="roomForm.StatusID">
-            <el-radio :label="1">{{ $t('common.enable') }}</el-radio>
-            <el-radio :label="0">{{ $t('common.disable') }}</el-radio>
+        <el-form-item
+          label="是否设置密码"
+          prop="has_pwd"
+        >
+          <el-radio-group v-model="roomForm.has_pwd">
+            <el-radio :label="1">
+              {{ $t('common.enable') }}
+            </el-radio>
+            <el-radio :label="0">
+              {{ $t('common.disable') }}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('room.deptCode')" prop="deptId">
+        <el-form-item
+          label="password"
+          prop="password"
+        >
           <el-input
-            type="text"
-            v-model="roomForm.DeptID"
+            v-model="roomForm.password"
+            type="password"
             auto-complete="off"
             placeholder
-          ></el-input>
+          />
         </el-form-item>
-        <el-form-item :label="$t('room.position')" prop="position">
+        <el-form-item
+          label="avatar"
+          prop="avatar"
+        >
           <el-input
+            v-model="roomForm.avatar"
             type="text"
-            v-model="roomForm.Position"
             auto-complete="off"
             placeholder
-          ></el-input>
+          />
         </el-form-item>
-        <el-form-item :label="$t('room.device')" prop="device">
+        <el-form-item
+          label="description"
+          prop="position"
+        >
           <el-input
+            v-model="roomForm.description"
             type="text"
-            v-model="roomForm.Device"
             auto-complete="off"
             placeholder
-          ></el-input>
+          />
         </el-form-item>
       </el-form>
 
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="cancelForm('roomForm')">{{
-          $t('room.cancel')
-        }}</el-button>
-        <el-button type="primary" @click="submitForm('roomForm')">{{
-          $t('room.confirm')
-        }}</el-button>
-      </span>
-    </el-dialog> 
-        <!--         所有会议室 -->
-        <el-table
-          :data="listData"
-          :loading="loading"
-          border
-          style="width: 100%"
-          :empty-text="$t('common.noData')"
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="cancelForm('roomForm')">
+          {{
+            $t('room.cancel')
+          }}
+        </el-button>
+        <el-button
+          type="primary"
+          @click="submitForm('roomForm')"
         >
-          <el-table-column
-            prop="RoomName"
-            :label="$t('room.name')"
-            width="200"
-          ></el-table-column>
-          <el-table-column
-            prop="Position"
-            :label="$t('room.position')"
-            width="150"
-          ></el-table-column>
-          <el-table-column :label="$t('room.site')" width="100" align="center" :filters="siteFilters"
-      :filter-method="filterTag" >
-            <template slot-scope="scope">
-              <el-tag size="medium">{{ translateSite(scope.row.Site) }}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column
-          sortable
-          sort-by="StatusID" 
-            prop="StatusID"
-            :label="$t('room.valid')"
-            width="100"
-            align="center"
-          >  <template slot-scope="scope">
-        <el-checkbox :checked="!!scope.row.StatusID" disabled=""></el-checkbox>
-           
+          {{
+            $t('room.confirm')
+          }}
+        </el-button>
+      </span>
+    </el-dialog>
+    <!--         所有会议室 -->
+    <el-table
+      :data="listData"
+      :loading="loading"
+      border
+      style="width: 100%"
+      :empty-text="$t('common.noData')"
+    >
+      <el-table-column
+        prop="name"
+        label="name"
+        width="200"
+      />
+      <el-table-column
+        prop="description"
+        label="description"
+        width="150"
+      />
+      <el-table-column
+        prop="has_pwd"
+        label="has_pwd"
+        width="100"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <el-checkbox
+            :checked="!!scope.row.has_pwd"
+            disabled
+          />
         </template>
-          </el-table-column>
-          <el-table-column
-            prop="Device"
-            :label="$t('room.device')"
-          ></el-table-column>
-          <el-table-column
-            prop="CreatedBy"
-            :label="$t('site.creator')"
-            width="150"
-          ></el-table-column>
-          <el-table-column
-            prop="CreatedTime"
-            :label="$t('site.createTime')"
-            sortable
-            width="160"
-          ></el-table-column>
-          <el-table-column
-            prop="LastUpdateBy"
-            :label="$t('site.updator')"
-            width="150"
-          ></el-table-column>
-          <el-table-column
-            prop="LastUpdatedTime"
-            :label="$t('site.updateTime')"
-            sortable
-            width="160"
-          ></el-table-column>
+      </el-table-column>
+      <el-table-column
+        prop="password"
+        label="password"
+      />
+      <el-table-column
+        prop="create_time"
+        label="create_time"
+        sortable
+        width="160"
+        ><template slot-scope="scope">
+           {{ transferTime(scope.row.create_time) }}
+        </template>
+         </el-table-column>
 
-          <el-table-column :label="$t('room.operation')" align="center"   width="200">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)"
-              >
-                {{ $t('room.edit') }}
-              </el-button>
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)"
-              >
-                {{ $t('room.delete') }}
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table> 
+      <el-table-column
+        :label="$t('room.operation')"
+        align="center"
+        width="200"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            @click="handleEdit(scope.$index, scope.row)"
+          >
+            {{ $t('room.edit') }}
+          </el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+          >
+            {{ $t('room.delete') }}
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -183,8 +185,8 @@ import {
   CreateSiteEntity,
   ISite,
   IRoom,
-  UpdateMeetingRoomEntity,
-  CreateMeetingRoomEntity,
+  UpdateChatRoomEntity,
+  CreateChatRoomEntity,
   MeetingRoomEntity
 } from '@/models'
 
@@ -197,15 +199,15 @@ export default class extends Vue {
   loading = false
   siteFilters: any = []
   async mounted() {
-    this.siteData = await RoomApi.GetSites()
-    this.siteFilters = this.siteData.map((item) => {
-      return {
-        value: item.Code,
-        text: item.Name
-      }
-    })
+    this.listData = await RoomApi.GetRoom()
+    // this.siteFilters = this.siteData.map(item => {
+    //   return {
+    //     value: item.Code,
+    //     text: item.Name
+    //   }
+    // })
     this.loading = true
-    this.refreshList()
+    // this.refreshList()
   }
 
   async refreshList() {
@@ -231,16 +233,13 @@ export default class extends Vue {
   }
 
   dialogVisible = false
-  roomForm: IRoom = {
-    RoomID: 0,
-    RoomName: '',
-    Site: '',
-    DeptID: '',
-    Position: '',
-    StatusID: 1,
-    ExtInt1: 0,
-    ExtInt2: 0,
-    Device: ''
+  roomForm: any = {
+    name: '',
+    description: '',
+    password: '',
+    avatar: '',
+    has_pwd: 0,
+    id: 0
   }
 
   addRoom() {
@@ -279,24 +278,21 @@ export default class extends Vue {
   }
 
   submitForm(formName: string) {
-    (this.$refs[formName] as any).validate(async (valid: boolean) => {
+    (this.$refs[formName] as any).validate(async(valid: boolean) => {
       if (valid) {
         this.dialogVisible = false
-        const entity: CreateMeetingRoomEntity = {
-          RoomName: this.roomForm.RoomName,
-          DeptID: this.roomForm.DeptID,
-          Position: this.roomForm.Position,
-          StatusID: this.roomForm.StatusID,
-          ExtInt1: this.roomForm.ExtInt1,
-          ExtInt2: this.roomForm.ExtInt2,
-          Device: this.roomForm.Device,
-          Site: this.roomForm.Site
+        const entity: CreateChatRoomEntity = {
+          name: this.roomForm.name,
+          description: this.roomForm.description,
+          password: this.roomForm.password,
+          avatar: this.roomForm.avatar,
+          has_pwd: ~~this.roomForm.has_pwd
         }
         console.log('submit:', this.roomForm)
         // 判断是新增还是编辑
-        if (this.roomForm.RoomID) {
-          const updateEntity: UpdateMeetingRoomEntity = {
-            RoomID: this.roomForm.RoomID,
+        if (this.roomForm.id) {
+          const updateEntity: UpdateChatRoomEntity = {
+            id: this.roomForm.id,
             ...entity
           }
           console.log('updateEntity', updateEntity)
@@ -325,27 +321,24 @@ export default class extends Vue {
   resetForm(formName: string) {
     (this.$refs[formName] as any).resetFields()
     this.roomForm = {
-      RoomID: 0,
-      RoomName: '',
-      Site: '',
-      DeptID: '',
-      Position: '',
-      StatusID: 1,
-      ExtInt1: 0,
-      ExtInt2: 0,
-      Device: ''
+      name: '',
+      description: '',
+      password: '',
+      avatar: '',
+      has_pwd: 0,
+      id: 0
     }
   }
 
   handleEdit(index: any, row: any) {
     console.log(index, row)
-    this.roomForm.RoomID = row.RoomID
-    this.roomForm.RoomName = row.RoomName
-    this.roomForm.Site = row.Site
-    this.roomForm.DeptID = row.DeptID
-    this.roomForm.Position = row.Position
-    this.roomForm.StatusID = row.StatusID
-    this.roomForm.Device = row.Device
+    this.roomForm.avatar = row.avatar
+    this.roomForm.create_time = row.create_time
+    this.roomForm.description = row.description
+    this.roomForm.has_pwd = row.has_pwd
+    this.roomForm.id = row.id
+    this.roomForm.name = row.name
+    this.roomForm.password = row.password
     console.log('editRoom:', this.roomForm)
     this.dialogVisible = true
   }
@@ -369,6 +362,12 @@ export default class extends Vue {
     this.$message(this.$t('common.deleteSuccess').toString())
     // 更新頁面數據
     this.refreshList()
+  }
+
+  transferTime(createTime: string) {
+    return moment(createTime).format(
+      'YYYY-MM-DD HH:mm:ss'
+    )
   }
 }
 </script>
