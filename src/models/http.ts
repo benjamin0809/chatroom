@@ -1,5 +1,5 @@
 export interface IResponseResult<T> {
-  Errcode: number
-  Errmsg: string
-  Result: T
+  errorCode: number
+  message: string
+  data: T
 }

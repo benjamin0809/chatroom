@@ -312,16 +312,6 @@
     <div class="chat">
       <div class="left">
         <ul>
-          <li :class="0 === currentRoomId ? 'liselected' : ''" @click="selectRoom()">
-            <div class="list-item">
-              <img class="avatar" src="/avatar/getAvatar/group" />
-              <div class="inner-item">
-                <p class="nick">技術性調整</p>
-                <p class="last-chat">精神小夥</p>
-              </div>
-            </div>
-          </li>
-
           <li
             v-for="(item, index) in myRooms"
             :key="index"
@@ -331,7 +321,7 @@
             <div class="list-item">
               <img
                 class="avatar"
-                src="http://image.popochiu.com/32845622-3-thread_28272798_20200307142236_s_70454_o_w_690_h_1211_9965.png"
+                :src="item.avatar || getImgUrl('group')"
               />
               <div class="inner-item">
                 <p class="nick">{{ item.name }}</p>
@@ -409,12 +399,12 @@
         </div>
 
         <div class="other-room">
-          <header>其他房間(2)</header>
+          <header>其他房間({{rooms.length}})</header>
           <section>
             <ul>
               <li v-for="(item, index) in rooms" :key="index">
                 <div slot="reference" class="online-contact">
-                  <img class="avatar" :src="getImgUrl(item.id)" />
+                  <img class="avatar" :src="item.avatar || getImgUrl('group')" />
                   <span class="room-name">{{ item.name }}</span>
                   <i class="el-icon-circle-plus-outline" @click="joinRoom(item, index)" />
                 </div>
@@ -452,7 +442,7 @@ export default class extends Vue {
   myRooms: any[] = []
   rooms: any[] = []
   title = '技術性調整'
-  instance: Socket = new Socket('localhost?token=12', '/chat')
+  instance: Socket = new Socket(process.env.VUE_APP_SERVER + '?token=12', '/chat')
   username = ''
   created() {
     this.msgBox.set(0, [])
@@ -492,10 +482,15 @@ export default class extends Vue {
       console.log(data)
 
       this.rooms = data.otherRooms
+      this.myRooms = data.myRooms
+
+      if (this.myRooms.length > 0) {
+        this.selectRoom(this.myRooms[0])
+      }
     })
 
     this.instance.listenOnReceiveMsg((data: Message) => {
-      console.log(data)
+      console.log('listenOnReceiveMsg',data)
       const msg = {
         msg: data.message,
         username: data.username,
